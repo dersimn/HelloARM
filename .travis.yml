@@ -1,0 +1,19 @@
+sudo: required
+services:
+  - docker
+language: bash
+script:
+# prepare qemu
+- docker run --rm --privileged multiarch/qemu-user-static:register --reset
+# build image
+- docker build -t dersimn/helloarm:armhf -f Dockerfile.armhf .
+# test image
+- docker run dersimn/helloarm:armhf
+# push image
+- >
+  if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+    TAG=$(if [ "$TRAVIS_BRANCH" != "master" ]; then echo ":$TRAVIS_BRANCH" ; fi)
+    docker tag dersimn/helloarm:armhf dersimn/helloarm:armhf$TAG
+    docker push dersimn/helloarm:armhf$TAG
+  fi
