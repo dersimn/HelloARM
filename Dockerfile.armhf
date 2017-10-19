@@ -2,8 +2,4 @@ FROM arm32v7/debian
 
 COPY . /stuff
 
-RUN cd /stuff && \
-	ls -la && \
-	cp echo.txt /echo.txt
-
-ENTRYPOINT [ "cat", "/echo.txt" ]
+ENTRYPOINT [ "cat", "/stuff/echo.txt" ]
