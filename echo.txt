@@ -1,1 +1,1 @@
-Hello, from a whole new era of multiplatform deployment!
+Hello, from a whole new era of multiplatform deployment! This even works for different branches on GitHub!
