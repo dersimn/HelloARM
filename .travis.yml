@@ -22,6 +22,6 @@ script:
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
     TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf" ; fi)
-    docker tag tmptag dersimn/helloarm:$TAG
-    docker push dersimn/helloarm:$TAG
+    docker tag tmptag $DOCKER_USER/helloarm:$TAG
+    docker push $DOCKER_USER/helloarm:$TAG
   fi
