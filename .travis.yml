@@ -8,8 +8,8 @@ script:
 - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 # build image
 - docker build -t dersimn/helloarm:armhf -f Dockerfile.armhf .
-# test image
-- docker run dersimn/helloarm:armhf
+- docker run dersimn/helloarm:armhf ls -la /
+- docker run dersimn/helloarm:armhf ls -la /stuff
 # push image
 - >
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
