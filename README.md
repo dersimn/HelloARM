@@ -4,7 +4,7 @@ This repository is for testing automated builds for `amd64` and `armhf`-targeted
 
 To build `amd64` targeted Docker images, you can simply setup an automated build from GitHub on Docker Hub. Whenever you push a new commit to GitHub, Docker Hub will pull it and build a new Docker image for you.
 
-For `armhf` (Raspberry Pi), there's no such system yet, but according to hypriot and Pradipta Kumar, there's a workaround using Travis CI.  
+For `armhf` (Raspberry Pi), there's no such system yet, but according to *hypriot* and *Pradipta Kumar*, there's a workaround using Travis CI.  
 Hypriot [claims][1] it is easy as long as there's a QEMU binary for Intel plattforms included in the Docker image (travis is running on Intel only). However, there aren't many trustworthy Docker images _targeted for ARM architecture_, that would include a non-ARM binary for Intel hardware.  
 Pradipta Kumar describes [a workaround][2] which involves downloading the missing binary and installing an alternative version of Docker CE, since it is not (yet) possible to inject the missing binary during a `docker build`.
 
