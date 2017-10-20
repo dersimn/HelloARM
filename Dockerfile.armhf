@@ -2,4 +2,9 @@ FROM arm32v7/debian
 
 COPY . /stuff
 
-CMD [ "cat", "/stuff/echo.txt" ]
+RUN cd /stuff && \
+	cp echo.txt /echo.txt && \
+	cd / && \
+	rm -r /stuff
+
+ENTRYPOINT [ "cat", "/echo.txt" ]

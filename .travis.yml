@@ -10,6 +10,8 @@ script:
 - tar xvf /tmp/qemu-arm-static.tar.gz -C /tmp
 # build image
 - docker build -t dersimn/helloarm:armhf -f Dockerfile.armhf .
+# test image
+- docker run -v /tmp/qemu-arm-static:/usr/bin/qemu-arm-static dersimn/helloarm:armhf
 # push image
 - >
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
