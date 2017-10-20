@@ -14,14 +14,14 @@ script:
 - wget https://github.com/multiarch/qemu-user-static/releases/download/v2.9.1/qemu-arm-static.tar.gz -O /tmp/qemu-arm-static.tar.gz
 - tar zxvf /tmp/qemu-arm-static.tar.gz -C /tmp
 # build image
-- docker build --volume type=bind,source=/tmp/qemu-arm-static,target=/usr/bin/qemu-arm-static -t dersimn/helloarm:armhf -f Dockerfile.armhf .
+- docker build --volume type=bind,source=/tmp/qemu-arm-static,target=/usr/bin/qemu-arm-static -t tmptag -f Dockerfile.armhf .
 # test image
-- docker run -v /tmp/qemu-arm-static:/usr/bin/qemu-arm-static dersimn/helloarm:armhf
+- docker run -v /tmp/qemu-arm-static:/usr/bin/qemu-arm-static tmptag
 # push image
 - >
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
-    TAG=$(if [ "$TRAVIS_BRANCH" != "master" ]; then echo ":$TRAVIS_BRANCH" ; fi)
-    docker tag dersimn/helloarm:armhf dersimn/helloarm:armhf$TAG
-    docker push dersimn/helloarm:armhf$TAG
+    TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf" ; fi)
+    docker tag tmptag dersimn/helloarm:$TAG
+    docker push dersimn/helloarm:$TAG
   fi
