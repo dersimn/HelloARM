@@ -3,6 +3,7 @@ services:
   - docker
 language: bash
 script:
+- ls -la
 # prepare qemu
 - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 # build image
