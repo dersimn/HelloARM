@@ -6,6 +6,9 @@ script:
 - ls -la
 # prepare qemu
 - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+- wget https://github.com/multiarch/qemu-user-static/releases/download/latest/qemu-arm-static.tar.gz -O /tmp/qemu-arm-static.tar.gz
+- tar xvf /tmp/qemu-arm-static.tar.gz -C /tmp
+- docker run -v /tmp/qemu-arm-static:/usr/bin/qemu-arm-static armhf/hello-world
 # build image
 - docker build -t dersimn/helloarm:armhf -f Dockerfile.armhf .
 - docker run dersimn/helloarm:armhf ls -la /
