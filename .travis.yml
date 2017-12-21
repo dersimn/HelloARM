@@ -12,7 +12,7 @@ before_install:
 
 # build image
 script:
-- docker build -t tmptag -f Dockerfile.armhf .
+- docker build --build-arg ARCH=$(TARGET) --no-cache -t tmptag -f Dockerfile.armhf .
 
 # push image
 after_success:
