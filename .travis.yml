@@ -12,13 +12,22 @@ before_install:
 
 # build image
 script:
-- docker build --build-arg ARCH=$(TARGET) --no-cache -t tmptag -f Dockerfile.armhf .
+- docker build --build-arg ARCH=arm32v7 --no-cache -t tmptag-arm32v7 -f Dockerfile.armhf .
+- docker build --build-arg ARCH=amd64 --no-cache -t tmptag-amd64 -f Dockerfile .
 
 # push image
 after_success:
+- echo "Downloading manifest-tool"
+- wget https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-linux-amd64
+- mv manifest-tool-linux-amd64 manifest-tool
+- chmod +x manifest-tool
 - >
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf" ; fi)
-    docker tag tmptag $DOCKER_USER/helloarm:$TAG
-    docker push $DOCKER_USER/helloarm:$TAG
+    TAG_ARM=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "arm32v7"; else echo "$TRAVIS_BRANCH-arm32v7" ; fi)
+    TAG_AMD=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "amd64"; else echo "$TRAVIS_BRANCH-amd64" ; fi)
+    docker tag tmptag-arm32v7 $DOCKER_USER/helloarm:$TAG_ARM
+    docker push $DOCKER_USER/helloarm:$TAG_ARM
+    docker tag tmptag-amd64 $DOCKER_USER/helloarm:$TAG_AMD
+    docker push $DOCKER_USER/helloarm:$TAG_AMD
+    ./manifest-tool --username $DOCKER_USER --password $DOCKER_PASS push from-spec manifest.yaml
   fi
