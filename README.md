@@ -16,7 +16,9 @@ You currently have two options:
 - Pick a baseimage that already includes the quemu binaries, but make sure that they're from a trustworthy source. I'm personally using holgerimbery's [debian image](https://hub.docker.com/r/holgerimbery/debian) and resin's [python image](https://hub.docker.com/r/resin/raspberrypi3-python). This example is described in the `master` branch.
 - Use the method described above to inject the quemu binaries during build process. This is described in the `quemu-inject` branch.
 
-## Run
+With either options you have additionally the possibility to create a manifest, to let Docker pull a platform specific image automatically, see `manifest` branch for details.
+
+## Try
 
 ### armhf (Raspberry Pi)
 
@@ -27,6 +29,13 @@ You currently have two options:
 
 	docker run dersimn/helloarm
 	docker run dersimn/helloarm:differentbranch
+
+### Automatic method using manifests
+
+Run on either plattform from the same command:
+
+    docker run dersimn/helloarm:manifest
+
 
 ## Build locally
 
