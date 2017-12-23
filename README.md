@@ -10,7 +10,7 @@ Pradipta Kumar describes [a workaround][2] which involves downloading the missin
 
 Combining the information from both developers, I created this repository which now builds fine for both plattform and even includes different branches. [Holger Imbery](https://github.com/holgerimbery) inspired me with this [line][3] to let travis name non-master branches accordingly.
 
-tl;dr:  
+## tl;dr:  
 You currently have two options:  
 
 - Pick a baseimage that already includes the quemu binaries, but make sure that they're from a trustworthy source. I'm personally using holgerimbery's [debian image](https://hub.docker.com/r/holgerimbery/debian) and resin's [python image](https://hub.docker.com/r/resin/raspberrypi3-python). This example is described in the `master` branch.
