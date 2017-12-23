@@ -1,4 +1,4 @@
-FROM holgerimbery/debian:latest
+FROM holgerimbery/debian:arm32v7-stretch
 
 COPY . /stuff
 
