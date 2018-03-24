@@ -5,6 +5,11 @@ services:
 
 language: bash
 
+env:
+  - DOCKER_USER=dersimn
+  - DOCKER_PASS="secret"
+  - DOCKER_REPO=helloarm
+
 # prepare qemu
 before_install:
 - docker run --rm --privileged multiarch/qemu-user-static:register --register
@@ -19,6 +24,6 @@ after_success:
 - >
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf" ; fi)
-    docker tag tmptag $DOCKER_USER/helloarm:$TAG
-    docker push $DOCKER_USER/helloarm:$TAG
+    docker tag tmptag $DOCKER_USER/$DOCKER_REPO:$TAG
+    docker push $DOCKER_USER/$DOCKER_REPO:$TAG
   fi
