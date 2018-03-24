@@ -5,11 +5,6 @@ services:
 
 language: bash
 
-env:
-  - DOCKER_USER=dersimn
-  - DOCKER_PASS="secret"
-  - DOCKER_REPO=helloarm
-
 # prepare qemu
 before_install:
 - docker run --rm --privileged multiarch/qemu-user-static:register --register
