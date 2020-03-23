@@ -1,54 +1,82 @@
-# Docker images - automated multiplattform build
+# Automated build of Docker Images on GitHub Push
 
-This repository is for testing automated builds for `amd64` and `armhf`-targeted (Raspberry Pi) Docker images.  
+To auto-build `amd64`-targeted Docker Images, you can simply setup an automated build from GitHub on Docker Hub. Whenever you push a new commit to GitHub, Docker Hub will pull it and build a new Docker image for you. For `arm` (Raspberry Pi), there's no such system yet, but according to *hypriot* and *Pradipta Kumar*, there's a workaround using Travis CI.  
 
-To build `amd64` targeted Docker images, you can simply setup an automated build from GitHub on Docker Hub. Whenever you push a new commit to GitHub, Docker Hub will pull it and build a new Docker image for you.
+**Every GitHub branch is one possible solution to create a multi-architecture Docker Image.**
 
-For `armhf` (Raspberry Pi), there's no such system yet, but according to *hypriot* and *Pradipta Kumar*, there's a workaround using Travis CI.  
-Hypriot [claims][1] it is easy as long as there's a QEMU binary for Intel plattforms included in the Docker image (travis is running on Intel only). However, there aren't many trustworthy Docker images _targeted for ARM architecture_, that would include a non-ARM binary for Intel hardware.  
-Pradipta Kumar describes [a workaround][2] which involves downloading the missing binary and installing an alternative version of Docker CE, since it is not (yet) possible to inject the missing binary during a `docker build` (which would be the equivalent of `docker run --volume <quemu path>`).
+## [`native`](https://github.com/dersimn/HelloARM/tree/native) (recommended)
 
-Combining the information from both developers, I created this repository which now builds fine for both plattform and even includes different branches. [Holger Imbery](https://github.com/holgerimbery) inspired me with this [line][3] to let travis name non-master branches accordingly.
+| :warning: For now you have to build the image locally, this is still the best method. |
+| --- |
 
-## tl;dr:  
-You currently have two options:  
+|             |         amd64        |         arm*         |
+|-------------|:--------------------:|:--------------------:|
+| Docker Hub  |                      |                      |
+| Travis      | (:heavy_check_mark:) | (:heavy_check_mark:) |
+| Local build |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
-- Pick a baseimage that already includes the quemu binaries, but make sure that they're from a trustworthy source. I'm personally using holgerimbery's [debian image](https://hub.docker.com/r/holgerimbery/debian) and resin's [python image](https://hub.docker.com/r/resin/raspberrypi3-python). This example is described in the `master` branch.
-- Use the method described above to inject the quemu binaries during build process. This is described in the `quemu-inject` branch.
+Use Docker's freshly introduced `buildx` command. Instructions [here](https://docs.docker.com/docker-for-mac/multi-arch/).  
+Make sure, that the baseimage specified in the Dockerfile (`FROM ...`) is compatible to the desired architectures. You can check this on Docker Hub, for e.g. this is the list of supported platforms for the [Debian image](https://github.com/dersimn/HelloARM/raw/master/docker-hub-platforms.png).
 
-With either options you have additionally the possibility to create a manifest, to let Docker pull a platform specific image automatically, see `manifest` branch for details.
+With this method one can simply run
 
-## Try
+    docker run dersimn/helloarm:native
 
-### armhf (Raspberry Pi)
+on any platform, Docker will then pull the right image for you.
 
-	docker run dersimn/helloarm:armhf
-	docker run dersimn/helloarm:differentbranch-armhf
+## [`manifest`](https://github.com/dersimn/HelloARM/tree/manifest)
 
-### amd64
+|             |        amd64       |                                          arm*                                          |
+|-------------|:------------------:|:--------------------------------------------------------------------------------------:|
+| Docker Hub  |                    |                                                                                        |
+| Travis      | :heavy_check_mark: | :heavy_check_mark: ![](https://api.travis-ci.org/dersimn/HelloARM.svg?branch=manifest) |
+| Local build |                    |                                                                                        |
 
-	docker run dersimn/helloarm
-	docker run dersimn/helloarm:differentbranch
+Combine either `simple` or `qemu-inject` with a manifest file, so that you don't have to specifically pull a Docker Image that suits your platform.
 
-### Automatic method using manifests
+Without a manifest file you have to run 
 
-Run on either plattform from the same command:
+    docker run dersimn/helloarm
+
+and 
+
+    docker run dersimn/helloarm:armhf
+
+respectively for a machine based on `amd64` or `arm` (Raspberry Pi). With a manifest file, one simply run
 
     docker run dersimn/helloarm:manifest
 
+on both platforms, Docker will then pull the right image for your platform.
 
-## Build locally
+## [`simple`](https://github.com/dersimn/HelloARM/tree/simple)
 
-### amd64
+Based on [Hypriot's work][1].
 
-	docker build -t helloarm .
+|             |        amd64       |                                         arm*                                         |
+|-------------|:------------------:|:------------------------------------------------------------------------------------:|
+| Docker Hub  | :heavy_check_mark: |                                                                                      |
+| Travis      |                    | :heavy_check_mark: ![](https://api.travis-ci.org/dersimn/HelloARM.svg?branch=simple) |
+| Local build |                    |                                                                                      |
 
-### armhf
+Configure Docker Hub to auto-build a amd64 image, configure Travis to build the arm image.  
+In this case the baseimage must include the qemu binaries for running arm executeables on a amd64 platform. However, there aren't many trustworthy Docker Images targeted for arm architecture, that would include a non-arm binary just for the build process - at least official images don't include the binaries. Wether you want to use unofficial Docker Images as base for your builds, is up to you.
 
-	docker build -t helloarm -f Dockerfile.armhf .
+## [`qemu-inject`](https://github.com/dersimn/HelloARM/tree/qemu-inject) (obsolete)
 
-When using *Docker for Mac* or *Docker for Windows* this command works by default for cross-plattform builds.
+|             |        amd64       |                                            arm*                                           |
+|-------------|:------------------:|:-----------------------------------------------------------------------------------------:|
+| Docker Hub  | :heavy_check_mark: |                                                                                           |
+| Travis      |                    | :heavy_check_mark: ![](https://api.travis-ci.org/dersimn/HelloARM.svg?branch=qemu-inject) |
+| Local build |                    |                                                                                           |
 
+Pradipta Kumar describes [a workaround][2] for the disadvantage of the `simple` approach. With this you can use an official baseimage and inject the qemu binaries just for the build process. However, this process involves installing an alternative version of Docker for the Travis build.
+
+
+# Credits
+
+[Hypriot][1].  
+[Pradipta Kumar][2].  
+[Holger Imbery](https://github.com/holgerimbery) inspired me with this [line][3] to let travis name non-master branches accordingly.
 
 [1]: https://blog.hypriot.com/post/setup-simple-ci-pipeline-for-arm-images/ 
 [2]: https://developer.ibm.com/linuxonpower/2017/07/28/travis-multi-architecture-ci-workflow/
