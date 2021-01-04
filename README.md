@@ -4,9 +4,29 @@ To auto-build `amd64`-targeted Docker Images, you can simply setup an automated 
 
 **Every GitHub branch is one possible solution to create a multi-architecture Docker Image.**
 
-## [`native`](https://github.com/dersimn/HelloARM/tree/native) (recommended)
+## [`github-workflow`](https://github.com/dersimn/HelloARM/tree/github-workflow) (recommended)
 
-| :warning: For now you have to build the image locally, this is still the best method. |
+|              |         amd64        |         arm*         |
+|--------------|:--------------------:|:--------------------:|
+| Docker Hub   |                      |                      |
+| Travis       |                      |                      |
+| Local build  |  :heavy_check_mark:  |  :heavy_check_mark:  |
+| GitHub build |  :heavy_check_mark:  |  :heavy_check_mark:  |
+
+You can use GitHub Workflows to trigger the exact same `buildx`-build on every pushed commit and even let GitHub tag your Docker Images for you using [semver tags](https://github.com/crazy-max/ghaction-docker-meta#handle-semver-tag).
+
+With this method one can run
+
+    docker run dersimn/helloarm:<branch name>
+    docker run dersimn/helloarm:1
+    docker run dersimn/helloarm:1.2
+    docker run dersimn/helloarm:1.2.3
+
+on any platform, Docker will then pull the right image for you.
+
+## [`native`](https://github.com/dersimn/HelloARM/tree/native)
+
+| :warning: For now you have to build the image locally, imho this is still the best method. |
 | --- |
 
 |             |         amd64        |         arm*         |
