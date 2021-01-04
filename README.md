@@ -17,10 +17,12 @@ You can use GitHub Workflows to trigger the exact same `buildx`-build on every p
 
 With this method one can run
 
-    docker run dersimn/helloarm:<branch name>
+    docker run dersimn/helloarm
     docker run dersimn/helloarm:1
     docker run dersimn/helloarm:1.2
     docker run dersimn/helloarm:1.2.3
+    docker run dersimn/helloarm:latest
+    docker run dersimn/helloarm:<branch name>
 
 on any platform, Docker will then pull the right image for you.
 
