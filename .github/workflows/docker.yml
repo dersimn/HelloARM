@@ -4,11 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      # - master
-      - github-workflow
+      - '**'       # matches every branch
+      - '!master'  # excludes master
     tags:
       - 'v*.*.*'
-    pull_request:
 
 jobs:
   release:
