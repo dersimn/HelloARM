@@ -1,10 +1,10 @@
-# Automated build of Docker Images on GitHub Push
+# Automated build of MultiArch Docker Images
 
 To auto-build `amd64`-targeted Docker Images, you can simply setup an automated build from GitHub on Docker Hub. Whenever you push a new commit to GitHub, Docker Hub will pull it and build a new Docker image for you. For `arm` (Raspberry Pi), there's no such system yet, but according to *hypriot* and *Pradipta Kumar*, there's a workaround using Travis CI.  
 
 **Every GitHub branch is one possible solution to create a multi-architecture Docker Image.**
 
-## [`github-workflow`](https://github.com/dersimn/HelloARM/tree/github-workflow) (recommended)
+## [`github-workflow`](https://github.com/dersimn/HelloARM-GitHub-Workflow) (recommended)
 
 |              |         amd64        |         arm*         |
 |--------------|:--------------------:|:--------------------:|
@@ -17,14 +17,14 @@ You can use GitHub Workflows to trigger the exact same `buildx`-build on every p
 
 With this method one can run
 
-    docker run dersimn/helloarm
-    docker run dersimn/helloarm:2
-    docker run dersimn/helloarm:2.3
-    docker run dersimn/helloarm:2.3.4
-    docker run dersimn/helloarm:latest
-    docker run dersimn/helloarm:<branch name>
+    docker run dersimn/helloarm-github-workflow
+    docker run dersimn/helloarm-github-workflow:2
+    docker run dersimn/helloarm-github-workflow:2.3
+    docker run dersimn/helloarm-github-workflow:2.3.4
+    docker run dersimn/helloarm-github-workflow:latest
+    docker run dersimn/helloarm-github-workflow:<branch name>
 
-on any platform, Docker will then pull the right image for you. For this demonstration all tags are prefixed with `github-workflow-`, so you may try an Image using e.g.: `docker run dersimn/helloarm:github-workflow-2.3.4`
+on any platform, Docker will then pull the right image (amd64/arm/…) for you.
 
 ## [`native`](https://github.com/dersimn/HelloARM/tree/native)
 
